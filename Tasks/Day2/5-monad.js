@@ -27,3 +27,16 @@ class Monad {
     return container.map(fn);
   }
 }
+
+const concatMonad = (
+  Monad.of(1)
+    .map(x => x + 9)
+    .map(x => x + 1)
+    .map(x => x + 7)
+);
+
+const multiplyMonad = Monad.of((v) => v * 2);
+
+const sum1 = multiplyMonad.ap(concatMonad).chain(v => v);
+
+console.log('Sum:', +sum1);
