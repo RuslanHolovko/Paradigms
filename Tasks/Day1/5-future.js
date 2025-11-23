@@ -3,7 +3,24 @@
 const fs = require('node:fs');
 
 class Future {
-  // Put implementation here
+  constructor(computation) {
+    this.fork = computation;
+  }
+
+  map(fn) {
+    return new Future((reject, resolve) =>
+      this.fork(reject, (value) => resolve(fn(value))),
+    );
+  }
+
+  chain(fn) {
+    return new Future((reject, resolve) =>
+      this.fork(
+        reject,
+        (value) => fn(value).fork(reject, resolve),
+      ),
+    );
+  }
 }
 
 const futurify = (fn) =>
@@ -17,7 +34,7 @@ const futurify = (fn) =>
 const readFuture = futurify(fs.readFile);
 const writeFuture = futurify(fs.writeFile);
 
-readFuture('future.js', 'utf8')
+readFuture('5-future.js', 'utf8')
   .map((text) => text.toUpperCase())
   .chain((text) => writeFuture('future.md', text))
   .fork(
