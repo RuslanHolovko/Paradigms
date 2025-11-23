@@ -2,15 +2,17 @@
 
 // Rewrite from OOP with mutable state
 // to FP using class-based syntax, immutable instance, method chaining
-
 class Adder {
   constructor(initial) {
     this.value = initial;
   }
 
+  static create(val) {
+    return new Adder(val);
+  }
+
   add(x) {
-    this.value += x;
-    return this;
+    return new Adder(this.value + x);
   }
 
   valueOf() {
@@ -18,6 +20,5 @@ class Adder {
   }
 }
 
-const sum1 = new Adder(1).add(9).add(1).add(7);
-// TODO: sum1 = Adder.create(1).add(9).add(1).add(7);
+const sum1 = Adder.create(1).add(9).add(1).add(7);
 console.log('Sum:', +sum1);
